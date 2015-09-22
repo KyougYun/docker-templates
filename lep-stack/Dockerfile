@@ -32,13 +32,9 @@ RUN apt-get install -y \
 
 # Copy configuration files
 COPY .docker /.docker
-
-# Copy application
-COPY app /app
  
 # Link files and install composer
-RUN chmod +x .docker/scripts/*; \
-    sync; \
+RUN chmod +x .docker/scripts/*; sync; \
     .docker/scripts/symlink_files.sh; \
     .docker/scripts/install_composer.sh
 
@@ -52,11 +48,8 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log; \
     ln -sf /dev/stdout /var/log/php5-fpm-access.log; \
     ln -sf /dev/stderr /var/log/php5-fpm-error.log;
 
-VOLUME ["/var/cache/nginx"]
+VOLUME ["/app", "/var/cache/nginx"]
 
 EXPOSE 22 80 443
 
 CMD ["/usr/bin/supervisord"]
-
-# ONBUILD COPY app /app
-# ONBUILD RUN .docker/scripts/install_app.sh
