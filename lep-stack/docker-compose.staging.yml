@@ -1,0 +1,12 @@
+web:
+  extends:
+    file: docker-compose.common.yml
+    service: web
+  env_file:
+    - .env-staging
+  environment:
+    - APP_ENV=staging
+  ports:
+    - "22:22"
+    - "80:80"
+    - "443:443"

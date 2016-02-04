@@ -1,1 +1,0 @@
-docker build -t ponticlaro/lep-stack .

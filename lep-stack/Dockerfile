@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 
 MAINTAINER Cristiano Baptista "cristiano.baptista@ponticlaro.com"
 
-# Install required and optional packages
+# Install required packages
 RUN apt-get update; \
     apt-get install -y \
     openssh-server \
@@ -19,37 +19,70 @@ RUN apt-get update; \
     npm \
     ruby \
     nginx \
-    php5-fpm
-
-# Install extra PHP modules
-RUN apt-get install -y \
+    php5-fpm \
     php5-mysql \
     php5-pgsql \
-    php5-xdebug \ 
+    php5-xdebug \
     php5-memcached \
     php5-redis \
-    php5-imagick 
+    php5-gd \
+    php5-imagick
 
-# Copy configuration files
-COPY .docker /.docker
- 
-# Link files and install composer
-RUN chmod +x .docker/scripts/*; sync; \
-    .docker/scripts/symlink_files.sh; \
-    .docker/scripts/install_composer.sh
+# Symlink nodejs 
+RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # Install node packages
 RUN sudo npm install -g \
     grunt-cli
 
-# Forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log; \
-    ln -sf /dev/stderr /var/log/nginx/error.log; \
-    ln -sf /dev/stdout /var/log/php5-fpm-access.log; \
-    ln -sf /dev/stderr /var/log/php5-fpm-error.log;
+# Add blackfire repo to sources list
+RUN wget -O - https://packagecloud.io/gpg.key | sudo apt-key add -
+RUN echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list 
 
-VOLUME ["/app", "/var/cache/nginx"]
+# Add elastic.co repo to sources list
+RUN curl https://packages.elasticsearch.org/GPG-KEY-elasticsearch | sudo apt-key add -
+RUN echo "deb http://packages.elastic.co/beats/apt stable main" |  sudo tee -a /etc/apt/sources.list.d/beats.list
 
+# Install:
+# - Blackfire Probe 
+# - Elastic Filebeat
+# - Elastic Topbeat
+# - Elastic Packetbeat
+RUN apt-get update; \
+    apt-get install -y \
+    blackfire-php \
+    filebeat \
+    topbeat \
+    packetbeat
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/bin/composer
+RUN chmod +x /usr/bin/composer
+
+# Copy placeholder code
+ADD app /app
+
+# NGINX: copy config files to container
+ADD .docker/templates/nginx/nginx.conf /etc/nginx/nginx.conf
+ADD .docker/templates/nginx/sites-available/default /etc/nginx/sites-available/default
+
+# PHP-FPM: copy config files to container
+ADD .docker/templates/php-fpm/php.ini /etc/php5/fpm/php.ini
+ADD .docker/templates/php-fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf
+ADD .docker/templates/php-fpm/pool.d /etc/php5/fpm/pool.d
+ADD .docker/templates/php-fpm/conf.d/9999-blackfire.ini /etc/php5/fpm/conf.d/9999-blackfire.ini
+
+# Elastic Beats: copy config files to container
+ADD .docker/templates/filebeat/filebeat.yml /etc/filebeat/filebeat.yml
+ADD .docker/templates/topbeat/topbeat.yml /etc/topbeat/topbeat.yml
+ADD .docker/templates/packetbeat/packetbeat.yml /etc/packetbeat/packetbeat.yml
+
+# Supervisord: copy config file to container
+ADD .docker/templates/supervisord.conf /etc/supervisor/supervisord.conf
+
+# Expose container ports
 EXPOSE 22 80 443
 
-CMD ["/usr/bin/supervisord"]
+# Use supervisord to keep processes alive
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

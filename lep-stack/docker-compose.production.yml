@@ -1,0 +1,12 @@
+web:
+  extends:
+    file: docker-compose.common.yml
+    service: web
+  env_file:
+    - .env
+  environment:
+    - APP_ENV=production
+  ports:
+    - "22:22"
+    - "80:80"
+    - "443:443"
