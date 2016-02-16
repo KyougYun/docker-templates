@@ -44,10 +44,10 @@ RUN curl https://packages.elasticsearch.org/GPG-KEY-elasticsearch | sudo apt-key
 RUN echo "deb http://packages.elastic.co/beats/apt stable main" |  sudo tee -a /etc/apt/sources.list.d/beats.list
 
 # Install:
-# - Blackfire Probe 
-# - Elastic Filebeat
-# - Elastic Topbeat
-# - Elastic Packetbeat
+# - Blackfire Probe: https://blackfire.io/
+# - Elastic Filebeat: https://www.elastic.co/downloads/beats/filebeat/
+# - Elastic Topbeat: https://www.elastic.co/downloads/beats/topbeat/
+# - Elastic Packetbeat: https://www.elastic.co/downloads/beats/packetbeat/
 RUN apt-get update; \
     apt-get install -y \
     blackfire-php \
@@ -64,25 +64,25 @@ RUN chmod +x /usr/bin/composer
 ADD app /app
 
 # NGINX: copy config files to container
-ADD .docker/templates/nginx/nginx.conf /etc/nginx/nginx.conf
-ADD .docker/templates/nginx/sites-available/default /etc/nginx/sites-available/default
+ADD .docker/nginx/config/nginx.conf /etc/nginx/nginx.conf
+ADD .docker/nginx/config/wordpress.conf /etc/nginx/sites-available/default
 
 # PHP-FPM: copy config files to container
-ADD .docker/templates/php-fpm/php.ini /etc/php5/fpm/php.ini
-ADD .docker/templates/php-fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf
-ADD .docker/templates/php-fpm/pool.d /etc/php5/fpm/pool.d
-ADD .docker/templates/php-fpm/conf.d/9999-blackfire.ini /etc/php5/fpm/conf.d/9999-blackfire.ini
+ADD .docker/php-fpm/php.ini /etc/php5/fpm/php.ini
+ADD .docker/php-fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf
+ADD .docker/php-fpm/pool.d /etc/php5/fpm/pool.d
+ADD .docker/php-fpm/conf.d/9999-blackfire.ini /etc/php5/fpm/conf.d/9999-blackfire.ini
 
 # Elastic Beats: copy config files to container
-ADD .docker/templates/filebeat/filebeat.yml /etc/filebeat/filebeat.yml
-ADD .docker/templates/topbeat/topbeat.yml /etc/topbeat/topbeat.yml
-ADD .docker/templates/packetbeat/packetbeat.yml /etc/packetbeat/packetbeat.yml
+ADD .docker/filebeat/filebeat.yml /etc/filebeat/filebeat.yml
+ADD .docker/topbeat/topbeat.yml /etc/topbeat/topbeat.yml
+ADD .docker/packetbeat/packetbeat.yml /etc/packetbeat/packetbeat.yml
 
 # Supervisord: copy config file to container
-ADD .docker/templates/supervisord.conf /etc/supervisor/supervisord.conf
+ADD .docker/supervisord.conf /etc/supervisor/supervisord.conf
 
 # Expose container ports
-EXPOSE 22 80 443
+EXPOSE 80 443
 
 # Use supervisord to keep processes alive
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

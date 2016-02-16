@@ -1,11 +1,13 @@
 web:
-  extends:
-    file: docker-compose.common.yml
-    service: web
+  build: .
+  volumes:
+    - ./app:/app
   env_file:
-    - .env
+    - app/.env-production
   environment:
     - APP_ENV=production
+    - APP_NAME
+    - DB_URL
   ports:
     - "22:22"
     - "80:80"

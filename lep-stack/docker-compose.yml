@@ -1,0 +1,40 @@
+elasticsearch:
+  build: .docker/elasticsearch
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+kibana:
+  build: .docker/kibana
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch
+mysql:
+  image: mysql:latest
+  environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    - MYSQL_DATABASE=dev
+  ports:
+    - "8306:3306"
+redis:
+  image: redis
+web:
+  build: .
+  volumes:
+    - ./app:/app
+  volumes:
+    - ./.docker/filebeat/filebeat.dev.yml:/etc/filebeat/filebeat.yml
+    - ./.docker/packetbeat/packetbeat.dev.yml:/etc/packetbeat/packetbeat.yml
+    - ./.docker/topbeat/topbeat.dev.yml:/etc/topbeat/topbeat.yml
+  env_file:
+    - app/.env
+  environment:
+    - APP_ENV=development
+  ports:
+    - "2222:22"
+    - "8888:80"
+    - "8443:443"
+  links:
+    - elasticsearch
+    - mysql
+    - redis

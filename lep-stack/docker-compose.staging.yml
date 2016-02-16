@@ -1,11 +1,13 @@
 web:
-  extends:
-    file: docker-compose.common.yml
-    service: web
+  build: .
+  volumes:
+    - ./app:/app
   env_file:
-    - .env-staging
+    - app/.env-staging
   environment:
     - APP_ENV=staging
+    - APP_NAME
+    - DB_URL
   ports:
     - "22:22"
     - "80:80"

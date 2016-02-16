@@ -1,55 +1,28 @@
-################### Filebeat Configuration Example #########################
+################### Topbeat Configuration Example #########################
 
-############################# Filebeat ######################################
-filebeat:
-  # List of prospectors to fetch data.
-  prospectors:
-    -
-      document_type: nginx-access
-      paths:
-        - /var/log/nginx/access.log
-    -
-      document_type: nginx-error
-      paths:
-        - /var/log/nginx/error.log
-    -
-      document_type: php-error
-      paths:
-        - /var/log/php/error.log
-        - /var/log/php/php5-fpm.log
-    -
-      document_type: php-opcache
-      paths:
-        - /var/log/php/opcache.log
-    -
-      document_type: php-mail
-      paths:
-        - /var/log/php/mail.log
+############################# Input ############################################
+input:
+  # In seconds, defines how often to read server statistics
+  period: 10
 
-    # Additional prospector
-    #-
-      # Configuration to use stdin input
-      #input_type: stdin
+  # Regular expression to match the processes that are monitored
+  # By default, all the processes are monitored
+  procs: [".*"]
 
-  # General filebeat configuration options
-  #
-  # Event count spool threshold - forces network flush if exceeded
-  #spool_size: 2048
+  # Statistics to collect (all enabled by default)
+  stats:
+    # per system statistics, by default is true
+    system: true
 
-  # Defines how often the spooler is flushed. After idle_timeout the spooler is
-  # Flush even though spool_size is not reached.
-  #idle_timeout: 5s
+    # per process statistics, by default is true
+    proc: true
 
-  # Name of the registry file. Per default it is put in the current working
-  # directory. In case the working directory is changed after when running
-  # filebeat again, indexing starts from the beginning again.
-  registry_file: /var/lib/filebeat/registry
+    # file system information, by default is true
+    filesystem: true
 
-  # Full Path to directory with additional prospector configuration files. Each file must end with .yml
-  # These config files must have the full filebeat config part inside, but only
-  # the prospector part is processed. All global options like spool_size are ignored.
-  # The config_dir MUST point to a different directory then where the main filebeat config file is in.
-  #config_dir:
+    # cpu usage per core, by default is false
+    cpu_per_core: false
+
 
 ###############################################################################
 ############################# Libbeat Config ##################################
@@ -67,7 +40,7 @@ output:
     # Scheme and port can be left out and will be set to the default (http and 9200)
     # In case you specify and additional path, the scheme is required: http://localhost:9200/path
     # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
-    hosts: ["http://logs.ponticlaro.com:9200"]
+    hosts: ["elasticsearch:9200"]
 
     # Optional protocol and basic auth credentials.
     #protocol: "https"
@@ -77,9 +50,9 @@ output:
     # Number of workers per Elasticsearch host.
     #worker: 1
 
-    # Optional index name. The default is "filebeat" and generates
-    # [filebeat-]YYYY.MM.DD keys.
-    #index: "filebeat"
+    # Optional index name. The default is "topbeat" and generates
+    # [topbeat-]YYYY.MM.DD keys.
+    #index: "topbeat"
 
     # Optional HTTP Path
     #path: "/elasticsearch"
@@ -145,7 +118,7 @@ output:
   ### Logstash as output
   #logstash:
     # The Logstash hosts
-    #hosts: ["logs.ponticlaro.com:5000"]
+    #hosts: ["localhost:5044"]
 
     # Number of workers per Logstash host.
     #worker: 1
@@ -159,7 +132,7 @@ output:
     # Optional index name. The default index name depends on the each beat.
     # For Packetbeat, the default is set to packetbeat, for Topbeat
     # top topbeat and for Filebeat to filebeat.
-    #index: filebeat
+    #index: topbeat
 
     # Optional TLS. By default is off.
     #tls:
@@ -188,10 +161,10 @@ output:
   ### File as output
   #file:
     # Path to the directory where to save the generated files. The option is mandatory.
-    #path: "/tmp/filebeat"
+    #path: "/tmp/topbeat"
 
-    # Name of the generated files. The default is `filebeat` and it generates files: `filebeat`, `filebeat.1`, `filebeat.2`, etc.
-    #filename: filebeat
+    # Name of the generated files. The default is `topbeat` and it generates files: `topbeat`, `topbeat.1`, `topbeat.2`, etc.
+    #filename: topbeat
 
     # Maximum size in kilobytes of each file. When this size is reached, the files are
     # rotated. The default value is 10 MB.
@@ -256,23 +229,23 @@ logging:
 
   # Send all logging output to syslog. On Windows default is false, otherwise
   # default is true.
-  to_syslog: true
+  #to_syslog: true
 
   # Write all logging output to files. Beats automatically rotate files if rotateeverybytes
   # limit is reached.
   #to_files: false
 
   # To enable logging to files, to_files option has to be set to true
-  #files:
+  files:
     # The directory where the log files will written to.
-    #path: /var/log/filebeat
+    #path: /var/log/mybeat
 
     # The name of the files where the logs are written to.
-    #name: filebeat
+    #name: mybeat
 
     # Configure log file size limit. If limit is reached, log file will be
     # automatically rotated
-    #rotateeverybytes: 10485760 # = 10MB
+    rotateeverybytes: 10485760 # = 10MB
 
     # Number of rotated log files to keep. Oldest files will be deleted first.
     #keepfiles: 7
@@ -285,5 +258,3 @@ logging:
   # Sets log level. The default log level is error.
   # Available log levels are: critical, error, warning, info, debug
   #level: error
-
-
