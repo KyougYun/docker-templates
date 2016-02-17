@@ -18,6 +18,7 @@ RUN apt-get update; \
     nodejs \
     npm \
     ruby \
+    mysql-client \
     nginx \
     php5-fpm \
     php5-mysql \
@@ -80,6 +81,11 @@ ADD .docker/packetbeat/packetbeat.yml /etc/packetbeat/packetbeat.yml
 
 # Supervisord: copy config file to container
 ADD .docker/supervisord.conf /etc/supervisor/supervisord.conf
+
+# Custom Tools: 
+# - Mysql Import
+ADD .docker/custom-tools/mysql-import.sh /usr/bin/mysql-import
+RUN chmod +x /usr/bin/mysql-import
 
 # Expose container ports
 EXPOSE 80 443

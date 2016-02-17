@@ -11,6 +11,9 @@ kibana:
     - elasticsearch
 mysql:
   image: mysql:latest
+  volumes:
+    - /database-dumps
+    - ./.docker/mysql/initdb/databases/:/docker-entrypoint-initdb.d/
   environment:
     - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     - MYSQL_DATABASE=dev
@@ -18,11 +21,10 @@ mysql:
     - "8306:3306"
 redis:
   image: redis
-web:
+app:
   build: .
   volumes:
     - ./app:/app
-  volumes:
     - ./.docker/filebeat/filebeat.dev.yml:/etc/filebeat/filebeat.yml
     - ./.docker/packetbeat/packetbeat.dev.yml:/etc/packetbeat/packetbeat.yml
     - ./.docker/topbeat/topbeat.dev.yml:/etc/topbeat/topbeat.yml
@@ -35,6 +37,6 @@ web:
     - "8888:80"
     - "8443:443"
   links:
-    - elasticsearch
     - mysql
+    - elasticsearch
     - redis
