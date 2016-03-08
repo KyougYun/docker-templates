@@ -7,8 +7,8 @@ RUN apt-get update; \
     supervisor
 
 # Install elastic sense plugin
-RUN kibana plugin --install elastic/sense
-RUN kibana plugin --install kibana/timelion
+RUN kibana plugin --install elastic/sense/latest
+RUN kibana plugin --install kibana/timelion/latest
 
 # Add entrypoint
 COPY entrypoint.sh /tmp/entrypoint.sh
