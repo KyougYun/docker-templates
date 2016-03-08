@@ -1,9 +1,10 @@
-FROM ubuntu:14.04
+FROM ubuntu:15.10
 
 MAINTAINER Cristiano Baptista "cristiano.baptista@ponticlaro.com"
 
 # Install required packages
-RUN apt-get update; \
+RUN apt-get dist-upgrade; \
+    apt-get update; \
     apt-get install -y \
     openssh-server \
     supervisor \
@@ -29,29 +30,25 @@ RUN apt-get update; \
     php5-gd \
     php5-imagick
 
-# Symlink nodejs 
-RUN ln -s /usr/bin/nodejs /usr/bin/node
-
 # Install node packages
-RUN sudo npm install -g \
+# - Grunt CLI
+RUN npm install -g \
     grunt-cli
 
 # Add blackfire repo to sources list
-RUN wget -O - https://packagecloud.io/gpg.key | sudo apt-key add -
-RUN echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list 
+RUN wget -O - https://packagecloud.io/gpg.key | apt-key add -
+RUN echo "deb http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list 
 
 # Add elastic.co repo to sources list
-RUN curl https://packages.elasticsearch.org/GPG-KEY-elasticsearch | sudo apt-key add -
-RUN echo "deb http://packages.elastic.co/beats/apt stable main" |  sudo tee -a /etc/apt/sources.list.d/beats.list
+RUN wget -O - https://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -
+RUN echo "deb http://packages.elastic.co/beats/apt stable main" | tee -a /etc/apt/sources.list.d/beats.list
 
 # Install:
-# - Blackfire Probe: https://blackfire.io/
 # - Elastic Filebeat: https://www.elastic.co/downloads/beats/filebeat/
 # - Elastic Topbeat: https://www.elastic.co/downloads/beats/topbeat/
 # - Elastic Packetbeat: https://www.elastic.co/downloads/beats/packetbeat/
 RUN apt-get update; \
     apt-get install -y \
-    blackfire-php \
     filebeat \
     topbeat \
     packetbeat
