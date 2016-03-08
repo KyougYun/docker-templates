@@ -9,6 +9,5 @@ app:
     - APP_NAME
     - DB_URL
   ports:
-    - "22:22"
     - "80:80"
     - "443:443"
