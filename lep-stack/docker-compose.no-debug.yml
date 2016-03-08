@@ -1,0 +1,23 @@
+mysql:
+  image: mysql:latest
+  environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    - MYSQL_DATABASE=dev
+  ports:
+    - "8306:3306"
+app:
+  build: .
+  volumes:
+    - ./app:/app
+    - ./.docker/filebeat/filebeat.dev.yml:/etc/filebeat/filebeat.yml
+    - ./.docker/packetbeat/packetbeat.dev.yml:/etc/packetbeat/packetbeat.yml
+    - ./.docker/topbeat/topbeat.dev.yml:/etc/topbeat/topbeat.yml
+  env_file:
+    - app/.env
+  environment:
+    - APP_ENV=development
+  ports:
+    - "8888:80"
+    - "8443:443"
+  links:
+    - mysql
