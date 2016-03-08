@@ -11,9 +11,6 @@ kibana:
     - elasticsearch
 mysql:
   image: mysql:latest
-  volumes:
-    - /database-dumps
-    - ./.docker/mysql/initdb/databases/:/docker-entrypoint-initdb.d/
   environment:
     - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     - MYSQL_DATABASE=dev
