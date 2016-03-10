@@ -1,3 +1,14 @@
+elasticsearch:
+  build: .docker/elasticsearch
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+kibana:
+  build: .docker/kibana
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch
 mysql:
   image: mysql:latest
   environment:
@@ -5,15 +16,18 @@ mysql:
     - MYSQL_DATABASE=dev
   ports:
     - "8306:3306"
+redis:
+  image: redis
 app:
-  build: .
+  image: ponticlaro/lep-stack # Linux, NGINX and PHP-FPM
+  # image: ponticlaro/lap-stack # Linux, Apache and PHP-FPM
   volumes:
     - ./app:/app
     - ./.docker/filebeat/filebeat.dev.yml:/etc/filebeat/filebeat.yml
     - ./.docker/packetbeat/packetbeat.dev.yml:/etc/packetbeat/packetbeat.yml
     - ./.docker/topbeat/topbeat.dev.yml:/etc/topbeat/topbeat.yml
   env_file:
-    - app/.env
+    - .env
   environment:
     - APP_ENV=development
   ports:
@@ -21,3 +35,5 @@ app:
     - "8443:443"
   links:
     - mysql
+    - elasticsearch
+    - redis

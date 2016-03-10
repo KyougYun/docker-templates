@@ -1,9 +1,10 @@
 app:
-  build: .
+  image: ponticlaro/lep-stack # Linux, NGINX and PHP-FPM
+  # image: ponticlaro/lap-stack # Linux, Apache and PHP-FPM
   volumes:
     - ./app:/app
   env_file:
-    - app/.env-production
+    - .env-production
   environment:
     - APP_ENV=production
     - APP_NAME
