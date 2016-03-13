@@ -1,4 +1,4 @@
-FROM ponticlaro:lap-stack
+FROM ponticlaro/lap-stack
 
 MAINTAINER Cristiano Baptista "cristiano.baptista@ponticlaro.com"
 
