@@ -5,6 +5,14 @@ filebeat:
   # List of prospectors to fetch data.
   prospectors:
     -
+      document_type: apache-access
+      paths:
+        - /var/log/apache2/access.log
+    -
+      document_type: apache-error
+      paths:
+        - /var/log/apache2/error.log
+    -
       document_type: nginx-access
       paths:
         - /var/log/nginx/access.log

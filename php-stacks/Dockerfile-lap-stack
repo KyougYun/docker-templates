@@ -21,7 +21,6 @@ RUN apt-get dist-upgrade; \
     ruby \
     mysql-client \
     apache2 \
-    libapache2-mod-fcgid \
     php5-fpm \
     php5-mysql \
     php5-pgsql \
@@ -64,11 +63,9 @@ ADD app /app
 
 # Apache: copy config files to container
 ADD .docker/apache/config/000-default.conf /etc/apache2/sites-available/000-default.conf
-ADD .docker/apache/config/php-fpm.conf /etc/apache2/conf-available/php-fpm.conf
 
 # Tweak Apache configuration
-RUN a2enmod headers actions proxy_fcgi alias
-RUN a2enconf php-fpm
+RUN a2enmod headers rewrite actions proxy_fcgi alias
 
 # PHP-FPM: copy config files to container
 ADD .docker/php-fpm/php.ini /etc/php5/fpm/php.ini
