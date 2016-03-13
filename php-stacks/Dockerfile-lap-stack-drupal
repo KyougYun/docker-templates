@@ -1,0 +1,6 @@
+FROM ponticlaro:lap-stack
+
+MAINTAINER Cristiano Baptista "cristiano.baptista@ponticlaro.com"
+
+# PHP-FPM: copy config files to container
+ADD .docker/php-fpm/php.drupal.ini /etc/php5/fpm/php.ini
