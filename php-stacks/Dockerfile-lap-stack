@@ -31,7 +31,7 @@ RUN apt-get dist-upgrade; \
     php5-imagick
 
 # Symlink NodeJS
-RUN sudo ln -s "$(which nodejs)" /usr/bin/node
+RUN ln -s "$(which nodejs)" /usr/bin/node
 
 # Install node packages
 # - Grunt CLI
