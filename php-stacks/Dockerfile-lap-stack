@@ -68,7 +68,7 @@ ADD app /app
 ADD .docker/apache/config/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Tweak Apache configuration
-RUN a2enmod headers rewrite actions proxy_fcgi alias
+RUN a2enmod headers rewrite actions proxy_fcgi alias ssl
 
 # PHP-FPM: copy config files to container
 ADD .docker/php-fpm/php.ini /etc/php5/fpm/php.ini
