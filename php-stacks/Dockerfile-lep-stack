@@ -28,7 +28,8 @@ RUN apt-get dist-upgrade; \
     php5-memcached \
     php5-redis \
     php5-gd \
-    php5-imagick
+    php5-imagick \
+    php5-curl
 
 # Symlink NodeJS
 RUN ln -s "$(which nodejs)" /usr/bin/node
