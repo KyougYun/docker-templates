@@ -16,11 +16,17 @@ mysql:
     - MYSQL_DATABASE=dev
   ports:
     - "8306:3306"
-redis:
-  image: redis
-app:
-  image: ponticlaro/lep-stack # Linux, NGINX and PHP-FPM
-  # image: ponticlaro/lap-stack # Linux, Apache and PHP-FPM
+# redis:   
+  # image: redis
+app:       
+  hostname: ponticlaro-lep-stack-dev
+  image: ponticlaro/lep-stack # LEP Stack [Linux, NGINX and PHP-FPM]
+  # image: ponticlaro/lap-stack # LAP Stack [Linux, Apache and PHP-FPM]
+  # image: ponticlaro/lep-stack-v2 # LEP Stack v2 [Linux, NGINX and PHP-FPM]
+  # build: . # For development. Also uncomment one of the dockerfiles bellow
+  # dockerfile: Dockerfile-lep-stack # LEP Stack [Linux, NGINX and PHP-FPM]
+  # dockerfile: Dockerfile-lap-stack # LAP Stack [Linux, Apache and PHP-FPM]
+  # dockerfile: Dockerfile-lep-stack-v2 # LEP Stack v2 [Linux, NGINX and PHP-FPM]
   volumes:
     - ./app:/app
     - ./.docker/filebeat/filebeat.dev.yml:/etc/filebeat/filebeat.yml
@@ -31,9 +37,9 @@ app:
   environment:
     - APP_ENV=development
   ports:
-    - "8888:80"
+    - "8080:80"
     - "8443:443"
-  links:
+  links: 
     - mysql
     - elasticsearch
-    - redis
+    # - redis

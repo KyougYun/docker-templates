@@ -1,4 +1,5 @@
 app:
+  hostname: ponticlaro-lep-stack-production
   image: ponticlaro/lep-stack # Linux, NGINX and PHP-FPM
   # image: ponticlaro/lap-stack # Linux, Apache and PHP-FPM
   volumes:
