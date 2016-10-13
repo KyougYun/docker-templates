@@ -27,6 +27,7 @@ RUN apt-get dist-upgrade; \
     php7.0-mbstring \
     php7.0-mysql \
     php7.0-pgsql \
+    php7.0-xml \
     php-imagick \
     php-memcached \
     php-redis \
