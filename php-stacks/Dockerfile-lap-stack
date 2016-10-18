@@ -72,10 +72,10 @@ ADD .docker/apache/config/000-default.conf /etc/apache2/sites-available/000-defa
 RUN a2enmod headers rewrite actions proxy_fcgi alias ssl
 
 # PHP-FPM: copy config files to container
-ADD .docker/php-fpm/config/php.ini /etc/php5/fpm/php.ini
-ADD .docker/php-fpm/config/php-fpm.conf /etc/php5/fpm/php-fpm.conf
-ADD .docker/php-fpm/config/pool.d /etc/php5/fpm/pool.d
-ADD .docker/php-fpm/config/conf.d/9999-blackfire.ini /etc/php5/fpm/conf.d/9999-blackfire.ini
+ADD .docker/php-fpm/v0/config/php.ini /etc/php5/fpm/php.ini
+ADD .docker/php-fpm/v0/config/php-fpm.conf /etc/php5/fpm/php-fpm.conf
+ADD .docker/php-fpm/v0/config/pool.d /etc/php5/fpm/pool.d
+ADD .docker/php-fpm/v0/config/conf.d/9999-blackfire.ini /etc/php5/fpm/conf.d/9999-blackfire.ini
 
 # Elastic Beats: copy config files to container
 ADD .docker/filebeat/filebeat.yml /etc/filebeat/filebeat.yml
@@ -83,7 +83,7 @@ ADD .docker/topbeat/topbeat.yml /etc/topbeat/topbeat.yml
 ADD .docker/packetbeat/packetbeat.yml /etc/packetbeat/packetbeat.yml
 
 # Supervisord: copy config file to container
-ADD .docker/supervisor/supervisord-lap-stack.conf /etc/supervisor/supervisord.conf
+ADD .docker/supervisor/v0/supervisord-lap-stack.conf /etc/supervisor/supervisord.conf
 
 # Custom Tools: 
 # - Mysql Import

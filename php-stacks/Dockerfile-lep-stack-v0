@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:15.10
 
 MAINTAINER Cristiano Baptista "cristiano.baptista@ponticlaro.com"
 
@@ -20,18 +20,16 @@ RUN apt-get dist-upgrade; \
     npm \
     ruby \
     mysql-client \
-    nginx-extras \
-    php7.0-fpm \
-    php7.0-curl \
-    php7.0-gd \
-    php7.0-mbstring \
-    php7.0-mysql \
-    php7.0-pgsql \
-    php7.0-xml \
-    php-imagick \
-    php-memcached \
-    php-redis \
-    php-soap
+    nginx \
+    php5-fpm \
+    php5-mysql \
+    php5-pgsql \
+    php5-xdebug \
+    php5-memcached \
+    php5-redis \
+    php5-gd \
+    php5-imagick \
+    php5-curl
 
 # Symlink NodeJS
 RUN ln -s "$(which nodejs)" /usr/bin/node
@@ -68,14 +66,14 @@ RUN chmod +x /usr/bin/composer
 ADD app /app
 
 # NGINX: copy config files to container
-ADD .docker/nginx/lep-stack-v2/config/nginx.conf /etc/nginx/nginx.conf
-ADD .docker/nginx/lep-stack-v2/config/wordpress.conf /etc/nginx/sites-available/default
+ADD .docker/nginx/v0/config/nginx.conf /etc/nginx/nginx.conf
+ADD .docker/nginx/v0/config/wordpress.conf /etc/nginx/sites-available/default
 
 # PHP-FPM: copy config files to container
-ADD .docker/php-fpm/lep-stack-v2/config/php.ini /etc/php/7.0/fpm/php.ini
-ADD .docker/php-fpm/lep-stack-v2/config/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
-ADD .docker/php-fpm/lep-stack-v2/config/pool.d /etc/php/7.0/fpm/pool.d
-ADD .docker/php-fpm/lep-stack-v2/config/conf.d/9999-blackfire.ini /etc/php/7.0/fpm/conf.d/9999-blackfire.ini
+ADD .docker/php-fpm/v0/config/php.ini /etc/php5/fpm/php.ini
+ADD .docker/php-fpm/v0/config/php-fpm.conf /etc/php5/fpm/php-fpm.conf
+ADD .docker/php-fpm/v0/config/pool.d /etc/php5/fpm/pool.d
+ADD .docker/php-fpm/v0/config/conf.d/9999-blackfire.ini /etc/php5/fpm/conf.d/9999-blackfire.ini
 
 # Elastic Beats: copy config files to container
 ADD .docker/filebeat/filebeat.yml /etc/filebeat/filebeat.yml
@@ -83,7 +81,7 @@ ADD .docker/topbeat/topbeat.yml /etc/topbeat/topbeat.yml
 ADD .docker/packetbeat/packetbeat.yml /etc/packetbeat/packetbeat.yml
 
 # Supervisord: copy config file to container
-ADD .docker/supervisor/supervisord-lep-stack-v2.conf /etc/supervisor/supervisord.conf
+ADD .docker/supervisor/v0/supervisord-lep-stack.conf /etc/supervisor/supervisord.conf
 
 # Custom Tools: 
 # - Mysql Import
