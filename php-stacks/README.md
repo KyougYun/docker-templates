@@ -2,26 +2,38 @@ LEP Stack
 ---
 
 ## Stack
-- [Ubuntu Trusty 14.04](http://releases.ubuntu.com/14.04/)
-- [Nginx](http://nginx.org/)
-- [PHP5](http://www.php.net/)
+- [Ubuntu 16.04 LTS (Xenial Xerus)](http://releases.ubuntu.com/16.04/)
+- [Nginx (Extras)](http://packages.ubuntu.com/xenial/nginx-extras)
+- [PHP7](http://www.php.net/)
 - [Supervisor](http://supervisord.org/)
 
-### PHP Modules
+### PHP7 Modules
+- curl
+- gd
+- imagick
+- mbstring
 - mysql
 - pgsql
-- xdebug 
 - memcached
 - redis
-- gd
-- imagick 
+- soap
+
+## System Tools
+- [zsh](http://www.zsh.org/)
+- [htop](https://hisham.hm/htop/)
 
 ## Dev tools
+- [Vim](http://www.vim.org/)
+- [GIT](https://git-scm.com/)
 - [Composer](https://getcomposer.org/)
 - [NodeJS](https://nodejs.org/)
 - [NPM](https://www.npmjs.com/)
 - [Grunt CLI](http://gruntjs.com/)
 - [Blackfire](https://blackfire.io/)
+
+## Image Processing Tools
+- [ImageMagick](https://www.imagemagick.org/script/index.php)
+- [GraphicsMagick](http://www.graphicsmagick.org/)
 
 ## Logging Tools
 - [Elastic Filebeat](https://www.elastic.co/products/beats/filebeat): Shipper for Log Data
